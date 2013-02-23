@@ -10,8 +10,8 @@ import ua.org.gdg.cherkassy.hackaton.askme.objects.Question;
 
 public class MainActivity extends FragmentActivity implements QuestionsListFragment.onListElementSelectedListener {
 
-    private String TAG = "MainActivity";
-    private String SENDER_ID = "847062316174";
+    private static String TAG = "MainActivity";
+    private static String SENDER_ID = "847062316174";
 
     /**
      * Called when the activity is first created.
@@ -21,7 +21,6 @@ public class MainActivity extends FragmentActivity implements QuestionsListFragm
         super.onCreate(savedInstanceState);
 
         GCMRegistrar.checkDevice(this);
-        GCMRegistrar.checkManifest(this);
         final String regId = GCMRegistrar.getRegistrationId(this);
         if (regId.equals("")) {
             GCMRegistrar.register(this, SENDER_ID);

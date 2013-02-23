@@ -21,7 +21,7 @@ public class DetailsActivity extends FragmentActivity implements AnswersListFrag
         super.onCreate(savedInstanceState);
 
         Intent i = getIntent();
-        if(AnswersListFragment.Instance != null)
+        if(AnswersListFragment.Instance != null && savedInstanceState == null)
         {
             AnswersListFragment.Instance.setQuestion((Question)i.getSerializableExtra("question"));
             AnswersListFragment.Instance.loadAnswers();

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import ua.org.gdg.cherkassy.hackaton.askme.R;
+import ua.org.gdg.cherkassy.hackaton.askme.ServerAPI;
 import ua.org.gdg.cherkassy.hackaton.askme.adapters.AnswersAdapter;
 import ua.org.gdg.cherkassy.hackaton.askme.objects.Answer;
 import ua.org.gdg.cherkassy.hackaton.askme.objects.AnswersCollection;
@@ -43,6 +44,11 @@ public class AnswersListFragment extends Fragment {
     {
         super.onCreateView(inflater,container, savedInstanceState );
 
+        if(savedInstanceState != null)
+        {
+            data = (AnswersCollection)savedInstanceState.getSerializable("collection");
+        }
+
         Instance = this;
 
         return inflater.inflate(R.layout.answers_list, container, false);
@@ -57,7 +63,18 @@ public class AnswersListFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //To change body of implemented methods use File | Settings | File Templates.
+                final String message = textView.getText().toString();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Answer a = new Answer();
+                        a.setQuestion_id(question.getId());
+                        a.setBody(message);
+                        ServerAPI.postAnswer(a);
+                        Toast.makeText(getActivity(), "Answer sent", Toast.LENGTH_SHORT);
+                    }
+                }).start();
             }
         });
 
@@ -120,7 +137,17 @@ public class AnswersListFragment extends Fragment {
 
     public void loadAnswers()
     {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                data = ServerAPI.getAnswers(question);
+            }
+        }).start();
+    }
 
+    public void onSaveInstanceState(Bundle out)
+    {
+        out.putSerializable("collection", data);
     }
 
 

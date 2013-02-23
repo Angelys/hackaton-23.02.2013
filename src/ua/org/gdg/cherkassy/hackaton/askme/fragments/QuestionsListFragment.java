@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import ua.org.gdg.cherkassy.hackaton.askme.R;
+import ua.org.gdg.cherkassy.hackaton.askme.ServerAPI;
 import ua.org.gdg.cherkassy.hackaton.askme.adapters.QuestionsAdapter;
 import ua.org.gdg.cherkassy.hackaton.askme.objects.Question;
 import ua.org.gdg.cherkassy.hackaton.askme.objects.QuestionsCollection;
@@ -40,6 +41,11 @@ public class QuestionsListFragment extends Fragment {
     {
         super.onCreateView(inflater,container, savedInstanceState );
 
+        if(savedInstanceState != null)
+        {
+            data = (QuestionsCollection)savedInstanceState.getSerializable("collection");
+        }
+
         Instance = this;
 
         return inflater.inflate(R.layout.quesions_list, container, false);
@@ -50,10 +56,25 @@ public class QuestionsListFragment extends Fragment {
         textView = (EditText) view.findViewById(R.id.input);
         button = (Button) view.findViewById(R.id.submit);
 
+        if(data == null)
+        {
+            getQuestions();
+        }
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //To change body of implemented methods use File | Settings | File Templates.
+                final String message = textView.getText().toString();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Question q = new Question();
+                        q.setTitle(message);
+                        ServerAPI.postQuestion(q);
+                        Toast.makeText(getActivity(), "Question sent", Toast.LENGTH_SHORT);
+                    }
+                }).start();
             }
         });
 
@@ -96,6 +117,11 @@ public class QuestionsListFragment extends Fragment {
 
     }
 
+    public void onSaveInstanceState(Bundle out)
+    {
+        out.putSerializable("collection", data);
+    }
+
     public void onDestroy()
     {
         Instance = null;
@@ -106,6 +132,17 @@ public class QuestionsListFragment extends Fragment {
     {
         data.add(q);
         updateUI();
+    }
+
+    public void getQuestions()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                data = ServerAPI.getQuestions();
+                updateUI();
+            }
+        }).start();
     }
 
 }
