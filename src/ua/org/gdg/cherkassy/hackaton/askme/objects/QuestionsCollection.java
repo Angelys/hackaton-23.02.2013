@@ -23,4 +23,20 @@ public class QuestionsCollection extends ArrayList<Question> {
         }
     }
 
+    public static QuestionsCollection generateData()
+    {
+        QuestionsCollection questionsCollection = new QuestionsCollection();
+
+        for(int i = 0; i < 25; i++)
+        {
+            Question q = new Question();
+            q.setTitle("This is question "+i);
+
+            questionsCollection.add(q);
+
+        }
+
+        return questionsCollection;
+    }
+
 }

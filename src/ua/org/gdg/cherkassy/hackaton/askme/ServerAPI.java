@@ -21,6 +21,7 @@ import ua.org.gdg.cherkassy.hackaton.askme.objects.Question;
 import ua.org.gdg.cherkassy.hackaton.askme.objects.QuestionsCollection;
 
 import java.io.IOException;
+import java.net.ResponseCache;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,7 +35,7 @@ import java.util.Locale;
  */
 public class ServerAPI {
 
-    public static String BASE_URL = "ua-gdg-hackathon-askme.appstore.com";
+    public static String BASE_URL = "http://ua-gdg-hackathon-askme.appstore.com";
     public static String reg_url = BASE_URL + "/register";
     public static String post_question_url = BASE_URL + "/q";
     public static String post_answer_url = BASE_URL + "/a";
@@ -64,25 +65,34 @@ public class ServerAPI {
         sendPostRequest(reg_url, data);
     }
 
-    public static void postQuestion(Question q)
+    public static boolean postQuestion(Question q)
     {
         List<NameValuePair> data = new ArrayList<NameValuePair>(2);
         data.add(new BasicNameValuePair("title", q.getTitle()));
 
-        sendPostRequest(post_question_url, data);
+        HttpResponse r = sendPostRequest(post_question_url, data);
+
+        return r != null && r.getStatusLine().getStatusCode() == 200;
     }
 
-    public static void postAnswer(Answer a)
+    public static boolean postAnswer(Answer a)
     {
         List<NameValuePair> data = new ArrayList<NameValuePair>(2);
         data.add(new BasicNameValuePair("question_id", Integer.toString(a.getQuestion_id())));
 
-        sendPostRequest(post_answer_url, data);
+        HttpResponse r = sendPostRequest(post_answer_url, data);
+
+        return r != null && r.getStatusLine().getStatusCode() == 200;
     }
 
     public static QuestionsCollection getQuestions()
     {
         HttpResponse response = sendGetRequest(get_questions, null);
+
+        if(response == null)
+        {
+            return new QuestionsCollection();
+        }
 
         JSONArray array = new JSONArray();
 
@@ -105,6 +115,11 @@ public class ServerAPI {
 
         HttpResponse response = sendGetRequest(get_answers, null);
 
+        if(response == null)
+        {
+            return new AnswersCollection();
+        }
+
         JSONArray array = new JSONArray();
 
         try
@@ -122,6 +137,11 @@ public class ServerAPI {
 
     public static HttpResponse sendGetRequest(String uri, List<NameValuePair> params)
     {
+        if(params == null)
+        {
+            params = new ArrayList<NameValuePair>(2);
+        }
+
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(uri + "?" + URLEncodedUtils.format(params, "utf-8"));
 

@@ -6,5 +6,6 @@
     <fragment android:id="@+id/answers_fragment"
               android:layout_height="match_parent"
               android:layout_width="match_parent"
+              class="ua.org.gdg.cherkassy.hackaton.askme.fragments.AnswersListFragment"
               />
 </LinearLayout>

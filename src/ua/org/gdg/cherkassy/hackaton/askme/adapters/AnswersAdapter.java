@@ -45,7 +45,7 @@ public class AnswersAdapter extends ArrayAdapter {
             convertView =  inflater.inflate(R.layout.answer_row, parent, false);
 
             viewHolder = new ViewHolder();
-            viewHolder.title = (TextView) convertView.findViewById(R.id.title);
+            viewHolder.body = (TextView) convertView.findViewById(R.id.body);
 
             convertView.setTag(viewHolder);
 
@@ -54,14 +54,14 @@ public class AnswersAdapter extends ArrayAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        viewHolder.title.setText(values.get(position).getBody());
+        viewHolder.body.setText(values.get(position).getBody());
 
         return convertView;
     }
 
     public static class ViewHolder
     {
-        TextView title;
+        TextView body;
     }
 
 }

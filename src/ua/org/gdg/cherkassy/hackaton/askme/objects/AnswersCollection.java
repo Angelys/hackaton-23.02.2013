@@ -22,4 +22,20 @@ public class AnswersCollection extends ArrayList<Answer> {
             this.add(new Answer(json.optJSONObject(i)));
         }
     }
+
+    public static AnswersCollection generate()
+    {
+        AnswersCollection answersCollection = new AnswersCollection();
+
+        for(int i = 0; i < 25; i++)
+        {
+            Answer a = new Answer();
+            a.setBody("This is answer  "+i);
+
+            answersCollection.add(a);
+
+        }
+
+        return answersCollection;
+    }
 }

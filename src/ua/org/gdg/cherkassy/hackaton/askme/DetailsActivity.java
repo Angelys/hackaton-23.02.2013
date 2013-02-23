@@ -19,15 +19,6 @@ public class DetailsActivity extends FragmentActivity implements AnswersListFrag
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent i = getIntent();
-        if(AnswersListFragment.Instance != null && savedInstanceState == null)
-        {
-            AnswersListFragment.Instance.setQuestion((Question)i.getSerializableExtra("question"));
-            AnswersListFragment.Instance.loadAnswers();
-            AnswersListFragment.Instance.updateUI();
-        }
-
         setContentView(R.layout.details);
     }
 

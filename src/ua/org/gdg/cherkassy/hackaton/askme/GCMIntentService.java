@@ -34,7 +34,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         ServerAPI.sendRegData(context, regId);
 
-        Toast.makeText(context, "Registered", Toast.LENGTH_SHORT );
     }
     @Override
     protected void onUnregistered(Context context, String regId)

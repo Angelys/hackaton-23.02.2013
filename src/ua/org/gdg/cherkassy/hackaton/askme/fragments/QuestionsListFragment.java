@@ -56,11 +56,6 @@ public class QuestionsListFragment extends Fragment {
         textView = (EditText) view.findViewById(R.id.input);
         button = (Button) view.findViewById(R.id.submit);
 
-        if(data == null)
-        {
-            getQuestions();
-        }
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,8 +66,14 @@ public class QuestionsListFragment extends Fragment {
                     public void run() {
                         Question q = new Question();
                         q.setTitle(message);
-                        ServerAPI.postQuestion(q);
-                        Toast.makeText(getActivity(), "Question sent", Toast.LENGTH_SHORT);
+                        if(ServerAPI.postQuestion(q))
+                        {
+                            showToast("Question sent");
+                            clearEditView();
+                        } else
+                        {
+                            showToast("Server not responding");
+                        }
                     }
                 }).start();
             }
@@ -86,6 +87,37 @@ public class QuestionsListFragment extends Fragment {
                                     int position, long id)
             {
                 mCallBack.onItemSelected(data.get(position));
+            }
+        });
+
+
+        if(data == null)
+        {
+            //getQuestions();
+            data = QuestionsCollection.generateData();
+            updateUI();
+        } else
+        {
+            updateUI();
+        }
+    }
+
+    public void showToast(final String text)
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void clearEditView()
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText("");
             }
         });
     }

@@ -16,7 +16,11 @@
         <TextView android:id="@+id/title"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:padding="5dp"
+                  android:paddingTop="5dp"
+                  android:paddingLeft="10dp"
+                  android:paddingRight="10dp"
+                  android:textSize="25dp"
+                  android:textColor="@android:color/holo_red_dark"
                 />
         <ListView android:id="@+id/list_view"
                   android:layout_width="match_parent"

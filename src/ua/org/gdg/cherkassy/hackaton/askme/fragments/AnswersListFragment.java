@@ -1,6 +1,7 @@
 package ua.org.gdg.cherkassy.hackaton.askme.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -47,6 +48,10 @@ public class AnswersListFragment extends Fragment {
         if(savedInstanceState != null)
         {
             data = (AnswersCollection)savedInstanceState.getSerializable("collection");
+            question = (Question)savedInstanceState.getSerializable("question");
+        } else
+        {
+            question = (Question)getActivity().getIntent().getSerializableExtra("question");
         }
 
         Instance = this;
@@ -71,21 +76,60 @@ public class AnswersListFragment extends Fragment {
                         Answer a = new Answer();
                         a.setQuestion_id(question.getId());
                         a.setBody(message);
-                        ServerAPI.postAnswer(a);
-                        Toast.makeText(getActivity(), "Answer sent", Toast.LENGTH_SHORT);
+                        if(ServerAPI.postAnswer(a))
+                        {
+                            showToast("Answer sent");
+                            clearEditView();
+                        } else
+                        {
+                            showToast("Server not responding");
+                        }
                     }
                 }).start();
             }
         });
 
         list = (ListView) view.findViewById(R.id.list_view);
-        list.setEnabled(false);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id)
             {
                 mCallBack.onItemSelected(data.get(position));
+            }
+        });
+
+        if(question != null)
+        {
+            setQuestion(question);
+            //loadAnswers();
+            data = AnswersCollection.generate();
+            updateUI();
+        }
+
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+    }
+
+    public void showToast(final String text)
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void clearEditView()
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText("");
             }
         });
     }
@@ -141,6 +185,7 @@ public class AnswersListFragment extends Fragment {
             @Override
             public void run() {
                 data = ServerAPI.getAnswers(question);
+                updateUI();
             }
         }).start();
     }
@@ -148,6 +193,7 @@ public class AnswersListFragment extends Fragment {
     public void onSaveInstanceState(Bundle out)
     {
         out.putSerializable("collection", data);
+        out.putSerializable("question", question);
     }
 
 
