@@ -1,9 +1,11 @@
 package ua.org.gdg.cherkassy.hackaton.askme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import ua.org.gdg.cherkassy.hackaton.askme.fragments.AnswersListFragment;
 import ua.org.gdg.cherkassy.hackaton.askme.objects.Answer;
+import ua.org.gdg.cherkassy.hackaton.askme.objects.Question;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,12 +19,20 @@ public class DetailsActivity extends FragmentActivity implements AnswersListFrag
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent i = getIntent();
+        if(AnswersListFragment.Instance != null)
+        {
+            AnswersListFragment.Instance.setQuestion((Question)i.getSerializableExtra("question"));
+            AnswersListFragment.Instance.loadAnswers();
+            AnswersListFragment.Instance.updateUI();
+        }
+
         setContentView(R.layout.details);
     }
 
     public void onItemSelected(Answer a)
     {
-
     }
 
 }

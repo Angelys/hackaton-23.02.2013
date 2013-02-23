@@ -6,12 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.*;
 import ua.org.gdg.cherkassy.hackaton.askme.R;
 import ua.org.gdg.cherkassy.hackaton.askme.adapters.AnswersAdapter;
 import ua.org.gdg.cherkassy.hackaton.askme.objects.Answer;
 import ua.org.gdg.cherkassy.hackaton.askme.objects.AnswersCollection;
+import ua.org.gdg.cherkassy.hackaton.askme.objects.Question;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,7 +24,11 @@ public class AnswersListFragment extends Fragment {
 
     public static AnswersListFragment Instance;
 
+    protected Button button;
+    protected TextView title;
+    protected EditText textView;
     protected ListView list;
+    public Question question;
     public AnswersCollection data;
 
     onListElementSelectedListener mCallBack;
@@ -46,8 +50,19 @@ public class AnswersListFragment extends Fragment {
 
     public void onViewCreated(View view, Bundle bundle)
     {
-        list = (ListView) view.findViewById(R.id.list_view);
+        title = (TextView) view.findViewById(R.id.title);
+        textView = (EditText) view.findViewById(R.id.input);
+        button = (Button) view.findViewById(R.id.submit);
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
+
+        list = (ListView) view.findViewById(R.id.list_view);
+        list.setEnabled(false);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -95,6 +110,17 @@ public class AnswersListFragment extends Fragment {
     {
         data.add(a);
         updateUI();
+    }
+
+    public void setQuestion(Question q)
+    {
+        question = q;
+        title.setText(q.getTitle());
+    }
+
+    public void loadAnswers()
+    {
+
     }
 
 

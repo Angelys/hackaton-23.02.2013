@@ -13,6 +13,12 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import ua.org.gdg.cherkassy.hackaton.askme.objects.Answer;
+import ua.org.gdg.cherkassy.hackaton.askme.objects.AnswersCollection;
+import ua.org.gdg.cherkassy.hackaton.askme.objects.Question;
+import ua.org.gdg.cherkassy.hackaton.askme.objects.QuestionsCollection;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,11 +34,12 @@ import java.util.Locale;
  */
 public class ServerAPI {
 
-    public static String BASE_URL = "";
-    public static String reg_url = BASE_URL + "/register/add";
-    public static String upd_url = BASE_URL + "/register/update";
+    public static String BASE_URL = "ua-gdg-hackathon-askme.appstore.com";
+    public static String reg_url = BASE_URL + "/register";
     public static String post_question_url = BASE_URL + "/q";
     public static String post_answer_url = BASE_URL + "/a";
+    public static String get_answers = BASE_URL + "/a";
+    public static String get_questions = BASE_URL + "/a";
 
     public static void sendRegData(Context context, String regId)
     {
@@ -47,12 +54,71 @@ public class ServerAPI {
 
     public static void sendUpdateData(String old_id, String new_id)
     {
+        String lang = Locale.getDefault().getDisplayLanguage();
+
         List<NameValuePair> data = new ArrayList<NameValuePair>(2);
         data.add(new BasicNameValuePair("old_id", old_id));
-        data.add(new BasicNameValuePair("new_id", new_id));
+        data.add(new BasicNameValuePair("id", new_id));
+        data.add(new BasicNameValuePair("lang", lang));
 
-        sendPostRequest(upd_url, data);
+        sendPostRequest(reg_url, data);
     }
+
+    public static void postQuestion(Question q)
+    {
+        List<NameValuePair> data = new ArrayList<NameValuePair>(2);
+        data.add(new BasicNameValuePair("title", q.getTitle()));
+
+        sendPostRequest(post_question_url, data);
+    }
+
+    public static void postAnswer(Answer a)
+    {
+        List<NameValuePair> data = new ArrayList<NameValuePair>(2);
+        data.add(new BasicNameValuePair("question_id", Integer.toString(a.getQuestion_id())));
+
+        sendPostRequest(post_answer_url, data);
+    }
+
+    public static QuestionsCollection getQuestions()
+    {
+        HttpResponse response = sendGetRequest(get_questions, null);
+
+        JSONArray array = new JSONArray();
+
+        try
+        {
+            array = new JSONArray(EntityUtils.toString(response.getEntity()));
+        } catch (JSONException je){
+
+        } catch (IOException ioe){
+
+        }
+
+        return new QuestionsCollection(array);
+    }
+
+    public static AnswersCollection getAnswers(Question q)
+    {
+        List<NameValuePair> data = new ArrayList<NameValuePair>(2);
+        data.add(new BasicNameValuePair("question_id", Integer.toString(q.getId())));
+
+        HttpResponse response = sendGetRequest(get_answers, null);
+
+        JSONArray array = new JSONArray();
+
+        try
+        {
+            array = new JSONArray(EntityUtils.toString(response.getEntity()));
+        } catch (JSONException je){
+
+        } catch (IOException ioe){
+
+        }
+
+        return new AnswersCollection(array);
+    }
+
 
     public static HttpResponse sendGetRequest(String uri, List<NameValuePair> params)
     {

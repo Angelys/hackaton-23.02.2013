@@ -2,6 +2,8 @@ package ua.org.gdg.cherkassy.hackaton.askme.objects;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: angelys
@@ -9,7 +11,7 @@ import org.json.JSONObject;
  * Time: 2:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Answer {
+public class Answer implements Serializable {
 
     public int id;
     public int question_id;
@@ -19,7 +21,9 @@ public class Answer {
 
     public Answer(JSONObject object)
     {
-        //TODO answer from json
+        id = object.optInt("id");
+        question_id = object.optInt("question_id");
+        body = object.optString("text");
     }
 
     public int getId() {

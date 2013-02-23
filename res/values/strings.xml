@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Hackaton</string>
     <string name="contentDescription">Question</string>
+    <string name="button">Send</string>
 </resources>

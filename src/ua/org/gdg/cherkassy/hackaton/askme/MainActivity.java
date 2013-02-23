@@ -1,5 +1,6 @@
 package ua.org.gdg.cherkassy.hackaton.askme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -33,6 +34,9 @@ public class MainActivity extends FragmentActivity implements QuestionsListFragm
 
     public void onItemSelected(Question q)
     {
+        Intent i = new Intent(this, DetailsActivity.class);
+        i.putExtra("question", q);
 
+        startActivity(i);
     }
 }

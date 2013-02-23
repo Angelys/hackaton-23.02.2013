@@ -1,5 +1,8 @@
 package ua.org.gdg.cherkassy.hackaton.askme.utils;
 
+import org.json.JSONArray;
+import ua.org.gdg.cherkassy.hackaton.askme.objects.QuestionsCollection;
+
 /**
  * Created with IntelliJ IDEA.
  * User: angelys
@@ -8,4 +11,5 @@ package ua.org.gdg.cherkassy.hackaton.askme.utils;
  * To change this template use File | Settings | File Templates.
  */
 public class JSON {
+
 }

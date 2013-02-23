@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 import com.google.android.gcm.GCMBaseIntentService;
+import org.json.JSONException;
+import org.json.JSONObject;
 import ua.org.gdg.cherkassy.hackaton.askme.fragments.QuestionsListFragment;
+import ua.org.gdg.cherkassy.hackaton.askme.objects.Question;
 import ua.org.gdg.cherkassy.hackaton.askme.objects.QuestionsCollection;
 
 /**
@@ -43,6 +46,14 @@ public class GCMIntentService extends GCMBaseIntentService {
     {
         if(QuestionsListFragment.Instance != null)
         {
+            JSONObject data = new JSONObject();
+
+            try
+            {
+                data = new JSONObject(intent.getStringExtra("data"));
+            } catch (JSONException e){}
+
+            QuestionsListFragment.Instance.addQuestion(new Question(data));
         }
     }
     @Override
